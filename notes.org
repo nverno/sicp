@@ -3,3 +3,4 @@
 * Emacs
 ** DONE he-expand for hyphen separated -- use lisp he
 ** DONE M-? popup help documentation for racket -- works for guile
+** TODO Fix comint-send so previous input works
