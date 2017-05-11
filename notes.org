@@ -1,5 +1,5 @@
 #+TITLE: SICP Notes
 
 * Emacs
-** TODO he-expand for hyphen separated -- use lisp he
-** TODO M-? popup help documentation for racket -- works for guile
+** DONE he-expand for hyphen separated -- use lisp he
+** DONE M-? popup help documentation for racket -- works for guile

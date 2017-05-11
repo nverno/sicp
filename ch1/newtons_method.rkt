@@ -29,7 +29,6 @@
 (exact->inexact (sqrt-iter 1 2))
 (exact->inexact (sqrt-iter 100 9))
 
-
 ;; Version of newton's method using the change in guess from
 ;; iteration to iteration instead of absolute tolerance
 ;; Previous fails for large and small numbers

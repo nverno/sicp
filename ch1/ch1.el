@@ -1,5 +1,5 @@
 (defun abs (x)
-  (if (< x 0) (- x) x))
+  (and (< x 0) (- x)))
 
 (abs -10)
 
