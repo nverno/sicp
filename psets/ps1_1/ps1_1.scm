@@ -76,4 +76,4 @@
   (lambda (x)
     (x (lambda (y) (y y)))))
 
-((foo6 list) identity)
+(foo6 (lambda (x) 3))
