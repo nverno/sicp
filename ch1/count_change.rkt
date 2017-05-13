@@ -27,5 +27,5 @@
 	((= kinds-of-coins 5) 50)))
 (count-change 100)  ; => 292
 
-;; Better solution: use lookup table to store already computed values (memoise)
+;; Better solution: use lookup table to store already computed values (memoize)
 ;; dynamic programming: fill in matrix
