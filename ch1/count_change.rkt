@@ -1,4 +1,4 @@
-#lang scheme
+#lang racket
 ;; Change counting problem
 ;; How many different ways to make change for a certain sum given
 ;; various change denominations
