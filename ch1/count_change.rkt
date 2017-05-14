@@ -28,4 +28,8 @@
 (count-change 100)  ; => 292
 
 ;; Better solution: use lookup table to store already computed values (memoize)
-;; dynamic programming: fill in matrix
+;; DP: counting all solutions, including permutations of coins as different
+;; ways of making the count
+
+;; (define (cc2 amount denominations)
+;;   (let ((table ()))))
