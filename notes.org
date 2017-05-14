@@ -4,10 +4,18 @@
 - [[https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/index.htm][Course Home]]
 - [[https://mitpress.mit.edu/sicp/psets/][Original PSets]]
 
-* Emacs
+* Emacs [3/3]
 ** DONE he-expand for hyphen separated -- use lisp he
 ** DONE M-? popup help documentation for racket -- works for guile
-** TODO macrostep-expand for racket?
-** TODO macrostep-expand for guile?
-** TODO How to step through debugger with racket/guile?
-** TODO Fix comint-send so previous input works
+** DONE separate scheme/lisp configs
+
+* Guile [0/5]
+** TODO Macro indentation, how to declare?
+** TODO macrostep-expand
+** TODO How to step through debugger?
+** TODO compile using guild
+** TODO Tutorial on integrating with C program
+
+* Racket [0/2]
+** TODO macrostep-expand
+** TODO how to step through debugger
