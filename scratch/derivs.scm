@@ -44,8 +44,20 @@
        (eq? (car exp) '+)))
 
 ;; create a sum expression
+;; (define (make-sum a1 a2)
+;;   (list '+ a1 a2))
+
+;; sum w/ simplification
 (define (make-sum a1 a2)
-  (list '+ a1 a2))
+  (cond [(and (number? a1)
+              (number? a2))
+         (+ a1 a2)]
+        [(and (number? a1) (zero? a1))
+         a2]
+        [(and (number? a2) (zero? a2))
+         a1]
+        [else
+         (list '+ a1 a2)]))
 
 ;; create some sum accessors
 (define a1 cadr)
@@ -56,8 +68,21 @@
   (and (not (atom? exp))
        (eq? (car exp) '*)))
 
+;; (define (make-product m1 m2)
+;;   (list '* m1 m2))
+
+;;; with simplification
 (define (make-product m1 m2)
-  (list '* m1 m2))
+  (cond [(and (number? m1)
+              (number? m2))
+         (* m1 m2)]
+        [(number? m1)
+         (cond [(zero? m1) nil]
+               [(eq? 1 m1) m2])]
+        [(number? m2)
+         (cond [(zero? m2) nil]
+               [(eq? 1 m2) m1])]
+        [else (list '* m1 m2)]))
 
 (define m1 cadr)
 (define m2 caddr)
