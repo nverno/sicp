@@ -34,8 +34,7 @@
 
 (define position
   (lambda (a v u t)
-    (+ (* 0.5 a)
-       (square t)
+    (+ (* 0.5 a (square t))
        (* v t)
        u)))
 
@@ -45,26 +44,37 @@
 (position 0 0 20 0)
 (position 0 5 10 10)
 (position 2 2 2 2)
-; (position 5 5 5 5)
+(position 5 5 5 5)
 
+;;; Problem 2
 
-;; Problem 2
-
+;; -b + ...
 (define root1
   (lambda (a b c)
-    YOUR-CODE-HERE))
+    (/ (+ (- b) (sqrt (- (square b) (* 4 a c))))
+       (* 2 a))))
 
+;; b + ...
 (define root2
   (lambda (a b c)
-    YOUR-CODE-HERE))
+    (/ (+ b (sqrt (- (square b) (* 4 a c))))
+       (* 2 a))))
+
+(root1 3 5 6)                           ;imaginary
+(root1 1 4 2)                           ;~-0.5
+(root2 1 4 2)                           ;~3.4
 
 ;; complete these procedures and show some test cases
 
-;; Problem 3
+;;; Problem 3
 
+;; only root2 makes sense physically, since the ball moves a distance
+;; in the direction of the horizontal vector before reaching zero
 (define time-to-impact
   (lambda (vertical-velocity elevation)
-    YOUR-CODE-HERE))
+    ;; a*t^2 + v*t + h
+    (let ((up-time (root2 gravity vertical-velocity elevation)))
+      up-time)))
 
 ;; Note that if we want to know when the ball drops to a particular height r 
 ;; (for receiver), we have
