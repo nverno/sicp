@@ -1,4 +1,8 @@
+#lang racket
 ;;; Project 1, 6.001, Spring 2005
+
+;;; To load partial defs
+(define YOUR-CODE-HERE '())
 
 ;;; idea is to simulate a baseball robot
 
@@ -54,34 +58,33 @@
     (/ (+ (- b) (sqrt (- (square b) (* 4 a c))))
        (* 2 a))))
 
-;; b + ...
+;; -b - ...
 (define root2
   (lambda (a b c)
-    (/ (+ b (sqrt (- (square b) (* 4 a c))))
+    (/ (- (- b) (sqrt (- (square b) (* 4 a c))))
        (* 2 a))))
 
 (root1 3 5 6)                           ;imaginary
 (root1 1 4 2)                           ;~-0.5
-(root2 1 4 2)                           ;~3.4
+(root2 1 4 2)                           ;~-3.4
 
 ;; complete these procedures and show some test cases
 
 ;;; Problem 3
 
-;; only root2 makes sense physically, since the ball moves a distance
-;; in the direction of the horizontal vector before reaching zero
+;; only root2 makes sense physically, since time can't be negative here
 (define time-to-impact
   (lambda (vertical-velocity elevation)
-    ;; a*t^2 + v*t + h
-    (let ((up-time (root2 gravity vertical-velocity elevation)))
-      up-time)))
+    ;; 1/2*a*t^2 + v*t + h
+    (root2 (- (/ gravity 2)) vertical-velocity elevation)))
 
 ;; Note that if we want to know when the ball drops to a particular height r 
 ;; (for receiver), we have
-
 (define time-to-height
   (lambda (vertical-velocity elevation target-elevation)
-    YOUR-CODE-HERE))
+    ;; 1/2*a*t^2 + v*t + (elevation - target-elevation)
+    (time-to-impact vertical-velocity
+                    (- elevation target-elevation))))
 
 ;; Problem 4
 

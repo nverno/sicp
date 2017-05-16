@@ -52,6 +52,8 @@
   (cond [(and (number? a1)
               (number? a2))
          (+ a1 a2)]
+        [(and (null? a1) (null? a2))
+         nil]
         [(and (number? a1) (zero? a1))
          a2]
         [(and (number? a2) (zero? a2))
@@ -76,11 +78,13 @@
   (cond [(and (number? m1)
               (number? m2))
          (* m1 m2)]
+        [(and (null? m1) (null? m2))
+         nil]
         [(number? m1)
-         (cond [(zero? m1) nil]
+         (cond [(zero? m1) 0]
                [(eq? 1 m1) m2])]
         [(number? m2)
-         (cond [(zero? m2) nil]
+         (cond [(zero? m2) 0]
                [(eq? 1 m2) m1])]
         [else (list '* m1 m2)]))
 
@@ -93,5 +97,7 @@
          (* b x))
       c))
 
-;; FNUGLY
-(deriv foo 'x) ; 2*a*x + b
+;; examples:  foo = 2*a*x + b 
+(deriv foo 'x)                          ; {+ {* a {+ x x}} b}
+(deriv foo 'b)                          ; x
+(deriv foo 'c)                          ; 1
