@@ -1,10 +1,10 @@
 #lang racket 
 
 ;;; Chapter 1, some exers
-(define (abs x)
-  (if (< x 0)
-      (- x)
-      x))
+;; (define (abs x)
+;;   (if (< x 0)
+;;       (- x)
+;;       x))
 
 ;; square function
 (define (square x) (* x x))
@@ -12,8 +12,8 @@
 (define (sum-of-squares x y)
   (+ (square x) (square y)))
 
-(define (f a)
-  (sum-of-squares (+ a 1) (* a 2)))
+;; (define (f a)
+;;   (sum-of-squares (+ a 1) (* a 2)))
 
 ;; -------------------------------------------------------------------
 ;;; 1.3
@@ -51,7 +51,7 @@
   (if (< x 0) (- x) x))
 
 
-(define (p) (p))
+;; (define (p) (p))
 (define (test x y)
   (if (= x 0) 0 y))
 
@@ -67,7 +67,7 @@
 (define (square2 x)
   (exp (double (log x))))
 (define (double x) (+ x x))
-(define (square x) (* x x))
+;; (define (square x) (* x x))
 
 ;; Linear recursion and iteration
 ;; linearly recursive factorial
@@ -150,3 +150,122 @@
 (define phi (/ (+ 1 (sqrt 5)) 2))
 (truncate (/ (+ 1 (expt phi 5)) (sqrt 5)))
 (define sigma (/ (- 1 (sqrt 5)) 2))
+
+;; Properties of golden ratio, ϕ, which also apply to γ, (1 - √5)/2
+;; 1/ϕ + 1 = ϕ, ϕ² = ϕ + 1
+;;
+;; Show base cases for n=0,1,2
+;; Induction on (n+1)th case, assuming both
+;;  	fib(n) = (ϕⁿ - γⁿ)/√5
+;;  	fib(n-1) = (ϕ^(n-1) - γ^(n-1))/√5
+;; then, it follows that
+;; 	fib(n+1) = (ϕ^(n+1) - γ^(n+1))/√5
+
+;; Reduction from recurrence relationship:
+;; fib(n+1) 	= fib(n) + fib(n-1)
+;;		= ( (ϕⁿ - γⁿ) + (ϕ^(n-1) - γ^(n-1)) )/√5
+;;		= ( ϕ^(n+1)*ϕ^(-1)*ϕ^(-2) + γ^(n+1)*γ^(-1)*γ^(-2) )/√5
+;; ==> using, ϕ² = ϕ + 1
+;;		= ( ϕ^(n+1)*ϕ^(-1)*(1+ϕ^(-1)) + γ^(n+1)*γ^(-1)*(1+γ^(-1)) )/√5
+;; ==> using, 1/ϕ + 1 = ϕ )
+;;		= ( ϕ^(n+1)*ϕ^(-1)*ϕ + γ^(n+1)*γ^(-1)*γ )/√5
+;;		= ( ϕ^(n+1) - γ^(n+1) )/√5
+
+
+;; -------------------------------------------------------------------
+;;; Ex. 1.15
+;; Givens:
+;; - approximation sin x ≈ x for sufficiently small x
+(define (cube x) (* x x x))
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+(define (sine angle)
+  (if (not (> (abs angle) 0.1))         ;0.1 considered sufficiently small here
+      angle
+      (p (sine (/ angle 3.0)))))
+
+(define (sine-trace angle)
+  (if (not (> (abs angle) 0.1))
+      angle
+      (begin
+        (set! sine-count (+ 1 sine-count))
+        (p (sine-trace (/ angle 3.0))))))
+
+(sine 12.15)
+(sin 12.15)
+
+(define sine-count 0)                   ;terrible
+(sine-trace 12.15)                      ;5
+(sine-trace 100)
+(sine-trace 1000)
+(sine-trace 10000)
+
+;; a. 5
+;; b. O(log a) ==> base 3
+
+;; -------------------------------------------------------------------
+;;; Exponentiation
+;; Simple recursive solution (linear recursive process and O(n) space)
+(define (expn b n)
+  (if (= n 0)
+      1
+      (* b (expn b (- n 1)))))
+
+;; linear iteration (also O(1) space)
+(define (expn2 b n)
+  (define (exp-iter counter product)
+    (if (= counter 0)
+	product
+	(exp-iter (- counter 1) (* b product))))
+  (exp-iter n 1))
+
+;; Successive squaring (O(log(n)) for space and time)
+;; ie, b^2 = b*b, b^4 = b^2 * b^2, b^8 = b^4 * b^4
+;; so, only three multiplies
+;;
+;; b^n = (b^(n/2))^2 if n is even
+;; b^n = b*b^(n-1) if n is odd
+(define (fast-expt b n)
+  (define (square x) (* x x))
+  (cond ((= n 0) 1)
+	((even? n) (square (fast-expt b (/ n 2))))
+	(else (* b (fast-expt b (- n 1))))))
+
+
+;; Exercise 1.16: iterative version of successive squaring
+(define (fast-expt2 b n)
+  (exp-iter2 1 b n))
+
+(define (exp-iter a b n)
+  (cond ((= n 0) a)
+	((= n 1) (* a b))
+	((even? n) (exp-iter a (* b b) (/ n 2)))
+	(else (exp-iter (* a b) b (- n 1)))))
+
+;; or take advantage of x*(x^2)^((n-1)/2) for odd n
+(define (exp-iter2 a b n)
+  (print ".")
+  (cond ((= n 0) a)
+	((= n 1) (* a b))
+	((even? n) (exp-iter2 a (* b b) (/ n 2)))
+	(else (exp-iter2 (* a b) (* b b) (/ (- n 1) 2)))))
+
+
+;; Exercise 1.17
+;; Multiplication by addition:
+;; (define (mult a b)
+;;   (if (= b 0)
+;;       0
+;;       (+ a (mult a (- b 1)))))
+;; Devise an integer multiplication by addition function that uses log number of steps
+;; (by doubling and halving)
+(define (mult n m)
+  (mult-iter n m 0))
+
+(define (mult-iter n m acc)
+  (cond ((or (= n 0) (= m 0)) acc)
+	((= m 1) (+ acc n))
+	((even? m) (mult-iter (double n) (halve m) acc))
+	(else (mult-iter n (- m 1) (+ acc n)))))
+
+(define (double n) (+ n n))
+(define (halve n) (/ n 2))

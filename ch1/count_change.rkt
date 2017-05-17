@@ -10,12 +10,12 @@
 ;; (define (count-change amount)
 ;;   (cc amount 5))
 
-(define (cc amount kinds-of-coins)
+(define (count-change amount kinds-of-coins)
   (cond ((= amount 0) 1)
 	((or (< amount 0) (= kinds-of-coins 0)) 0)
-	(else (+ (cc amount
+	(else (+ (count-change amount
 		     (- kinds-of-coins 1))
-		 (cc (- amount
+		 (count-change (- amount
 			(first-denomination kinds-of-coins))
 		     kinds-of-coins)))))
 
@@ -25,7 +25,7 @@
 	((= kinds-of-coins 3) 10)
 	((= kinds-of-coins 4) 25)
 	((= kinds-of-coins 5) 50)))
-(count-change 100)  ; => 292
+(count-change 100 5)  ; => 292
 
 ;; Better solution: use lookup table to store already computed values (memoize)
 ;; DP: counting all solutions, including permutations of coins as different
