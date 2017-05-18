@@ -311,3 +311,78 @@
       a
       (gcd b (remainder a b))))
 
+;;; Ex 1.20
+
+;; Normal-order, jesus
+;; 
+;; 1. +0 evaluations
+;; (if (= 40 0)
+;;     206
+;;     (gcd (remainder 206 40)))
+;;
+;; 2. +1 evaluations (first if clause)
+;; (if (= (remainder 206 40) 0)  ;6
+;;     (remainder 206 40)
+;;     (gcd (remainder 206 40)
+;;          (remainder 40 (remainder 206 40))))
+;;
+;; 3. +1 evals
+;; (if (= (remainder 40 (remainder 206 40)) 0) ;4
+;;     (remainder 40 (remainder 206 40))
+;;     (gcd (remainder 40 (remainder 206 40))
+;;          (remainder (remainder 206 40)
+;;                     (remainder 40 (remainder 206 40)))))
+;;
+;; 4. +1 evals
+;; (if (= (remainder (remainder 206 40)
+;;                   (remainder 40 (remainder 206 40))) ;2
+;;        0)
+;;     (remainder (remainder 206 40)
+;;                (remainder 40 (remainder 206 40)))
+;;     (gcd (remainder (remainder 206 40)
+;;                     (remainder 40 (remainder 206 40)))
+;;          (remainder (remainder 40 (remainder 206 40))
+;;                     (remainder (remainder 206 40)
+;;                                (remainder 40 (remainder 206 40))))))
+;;
+;; 5. +14 evals
+;; (if (= (remainder (remainder 40 (remainder 206 40))
+;;                   (remainder (remainder 206 40)
+;;                              (remainder 40 (remainder 206 40)))) ;0
+;;        0)
+;;     (remainder (remainder 40 (remainder 206 40))
+;;                (remainder (remainder 206 40)
+;;                           (remainder 40 (remainder 206 40))))
+;;     (gcd ...))                          ;not evaluated
+;;
+;; I think the total calls to remainder for normal-order is then
+;; 17.
+;;
+;; Applicative Order Evaluation
+;;
+;; 1. +1 evals
+;; (if (= 40 0)
+;;     206
+;;     (gcd 40 (remainder 206 40)))           ;6
+;;
+;; 2. +1 evals
+;; (if (= 6 0)
+;;     40
+;;     (gcd 6 (remainder 40 6)))           ;4
+;;
+;; 3. +1 evals
+;; (if (= 4 0)
+;;     6
+;;     (gcd 4 (remainder 6 4)))              ;2
+;;
+;; 4. +1 evals
+;; (if (= 2 0)
+;;     4
+;;     (gcd 2 (remainder 4 2)))            ;0
+;;
+;; 5. +0 evals
+;; (if (= 0 0)
+;;     2
+;;     (gcd ...))                          ;not evaluated
+;;
+;; Totaling 4 calls to remainder for applicative-order.
