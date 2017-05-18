@@ -5,6 +5,7 @@
 - [[https://mitpress.mit.edu/sicp/psets/][Original PSets]]
 - [[http://docs.racket-lang.org/sicp-manual/index.html][Racket sicp support packages]]
 - [[https://www.quora.com/What-are-the-best-books-on-real-world-racket][List of racket tutorials]]
+- [[http://inst.eecs.berkeley.edu/~cs61as/discussions/dis1/dis1_sol.pdf][Applicative vs. Normal order evaluation]]
 * Emacs [3/3]
 ** DONE he-expand for hyphen separated -- use lisp he
 ** DONE M-? popup help documentation for racket -- works for guile
