@@ -231,7 +231,8 @@
 	(else (* b (fast-expt b (- n 1))))))
 
 
-;; Exercise 1.16: iterative version of successive squaring
+;; -------------------------------------------------------------------
+;;; Exercise 1.16: iterative version of successive squaring
 (define (fast-expt2 b n)
   (exp-iter2 1 b n))
 
@@ -250,7 +251,8 @@
 	(else (exp-iter2 (* a b) (* b b) (/ (- n 1) 2)))))
 
 
-;; Exercise 1.17
+;; -------------------------------------------------------------------
+;;; Exercise 1.17, 1.18
 ;; Multiplication by addition:
 ;; (define (mult a b)
 ;;   (if (= b 0)
@@ -261,11 +263,51 @@
 (define (mult n m)
   (mult-iter n m 0))
 
+;; (define (double n) (+ n n))
+(define (halve n) (/ n 2))
+
 (define (mult-iter n m acc)
   (cond ((or (= n 0) (= m 0)) acc)
 	((= m 1) (+ acc n))
-	((even? m) (mult-iter (double n) (halve m) acc))
-	(else (mult-iter n (- m 1) (+ acc n)))))
+	((even? m) (mult-iter (double n)
+                              (halve m)
+                              acc))
+	(else (mult-iter n
+                         (- m 1)
+                         (+ acc n)))))
 
-(define (double n) (+ n n))
-(define (halve n) (/ n 2))
+;; -------------------------------------------------------------------
+;;; Ex. 1.19: fast fibonacci
+;; compute fibonacci numbers in log steps
+;; write T_pq as:
+;; [ q+p q ]
+;; [  q  p ]
+;; so, [a b] %*% T_pq => [a(q+p)+bq, aq+bp]
+;; Then, compute T_p'q' = (T_pq)^2
+;; T_p'q' = [ (q+p)^2+q^2 , q(q+p)+qp ]
+;;          [ q(q+p)+qp   , q^2+p^2   ]
+;; thus, p' = q^2+p^2, q' = q^2 + 2pq
+(define (fib2 n)
+  (fib-iter2 1 0 0 1 n))
+
+(define (fib-iter2 a b p q count)
+  (cond ((= count 0) b)
+	((even? count)
+	 (fib-iter2 a
+		    b
+		    (+ (* p p) (* q q))
+		    (+ (* q q) (* 2 p q))
+		    (/ count 2)))
+	(else (fib-iter2 (+ (* b q) (* a q) (* a p))
+			 (+ (* b p) (* a q))
+			 p
+			 q
+			 (- count 1)))))
+
+;; -------------------------------------------------------------------
+;;; GCD
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+
