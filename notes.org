@@ -6,6 +6,9 @@
 - [[http://docs.racket-lang.org/sicp-manual/index.html][Racket sicp support packages]]
 - [[https://www.quora.com/What-are-the-best-books-on-real-world-racket][List of racket tutorials]]
 - [[http://inst.eecs.berkeley.edu/~cs61as/discussions/dis1/dis1_sol.pdf][Applicative vs. Normal order evaluation]]
+- [[http://www.billthelizard.com/2009/10/sicp-challenge.html][SICP-challenge]]
+- [[http://community.schemewiki.org/?The-Scheme-Cookbook][scheme cookbook]]
+
 * Emacs [3/3]
 ** DONE he-expand for hyphen separated -- use lisp he
 ** DONE M-? popup help documentation for racket -- works for guile
