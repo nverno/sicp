@@ -1,4 +1,5 @@
 #lang racket 
+(require sicp)
 
 ;;; Chapter 1, some exers
 ;; (define (abs x)
@@ -18,10 +19,10 @@
 ;; -------------------------------------------------------------------
 ;;; 1.3
 ;; Return the sum of the squares of the largest two parameters
-(define (sss x1 x2 x3)
-  (let ((sorted (sort (list x1 x2 x3) >)))
-    (+ (* (car sorted) (car sorted))
-       (* (car (cdr sorted)) (car (cdr sorted))))))
+;; (define (sss x1 x2 x3)
+;;   (let ((sorted (sort (list x1 x2 x3) >)))
+;;     (+ (* (car sorted) (car sorted))
+;;        (* (car (cdr sorted)) (car (cdr sorted))))))
 
 (define (sss2 x1 x2 x3)
   (if (> x1 x2)
@@ -33,9 +34,9 @@
           (sum-of-squares x1 x2))))
 
 (sss2 1 2 3)
-(sss 1 2 3)  ; => 13
+;; (sss 1 2 3)  ; => 13
 (sss2 3 1 2)
-(sss 3 1 2)  ; => 13
+;; (sss 3 1 2)  ; => 13
 
 ;; Compound operator => if b is negative -, else +
 (define (a-plus-abs-b a b)
@@ -388,4 +389,171 @@
 ;; Totaling 4 calls to remainder for applicative-order.
 
 ;; -------------------------------------------------------------------
-;;; Ex. 1.21 
+;;; Primes
+
+;; find smallest integral divisor (> 1)
+(define (smallest-divisor n)
+  (find-divisor n 2))
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+(define (divides? a b)
+  (= (remainder b a) 0))
+
+;; testing if number is prime -- only prime if its smallest divisor is itself
+;; only needs test numbers up to sqrt(n) => O(sqrt(n))
+(define (prime? n)
+  (= (smallest-divisor n) n))
+
+;; (prime? 99)
+;; (prime? 101)
+
+;;; Fermat test
+;; O(log(n)) -- fermat's little theorem
+;; If n is a prime number and a is any positive integer less than n,
+;; then a raised to the nth power is congruent to a mod n.
+
+;; so, to test primality of number n, pick a random number, a<n, and compute
+;; a^n mod n. If result is not equal to a, then number is not prime. If it is,
+;; then chances are good that n is prime (fails in some cases -- eg. carmichael)
+
+;; modexp
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ;; use successive squaring, so O(log(n))
+        ((even? exp)
+         (remainder (square (expmod base (/ exp 2) m))
+                    m))
+        (else
+         (remainder (* base (expmod base (- exp 1) m))
+                    m))))
+
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+
+;; (fermat-test 101)
+;; (fermat-test 100)
+
+;; run test a given number of times to increase the accuracy
+(define (fast-prime? n times)
+  (cond ((= times 0) #t)
+        ((fermat-test n) (fast-prime? n (- times 1)))
+        (else #f)))
+
+(fast-prime? 1009 10)
+(fast-prime? 1003 10)
+
+;; -------------------------------------------------------------------
+;;; Ex. 1.21
+(map smallest-divisor '(199 1999 19999))
+
+;; -------------------------------------------------------------------
+;;; Ex. 1.22
+(define (timed-prime-test n)
+  (newline)
+  (display n)
+  ;; runtime defined in sicp module
+  (start-prime-test n (runtime)))
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime (- (runtime) start-time))))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+
+;; report first three primes in range [start, end)
+(define (search-for-primes-in-range start end count)
+  (when (and (< start end)
+             (< count 3))
+    (if (even? start)
+        (search-for-primes-in-range (+ 1 start) end count)
+        (begin
+          (if (prime? start)
+              (begin 
+                (timed-prime-test start)
+                (search-for-primes-in-range (+ 2 start) end (+ 1 count)))
+              (search-for-primes-in-range (+ 2 start) end count))))))
+
+(define (search-for-primes start)
+  (search-for-primes-in-range start (+ start 1000) 0))
+
+(search-for-primes 1000)
+(search-for-primes 10000)
+(search-for-primes 100000)
+(search-for-primes 1000000)
+
+;; -------------------------------------------------------------------
+;;; Ex. 1.23
+
+;; return 3 if n is 2, otherwise n+2
+(define (next n)
+  (cond ((= n 2) 3)
+        (else (+ n 2))))
+
+;; find smallest integral divisor (> 1)
+(define (find-divisor-next n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        ;; use `next' instead of 1 + test-divisor
+        ;; to avoid needlessly checking larger even numbers
+        (else (find-divisor-next n (next test-divisor)))))
+
+
+;; -------------------------------------------------------------------
+;;; Ex. 1.24
+;; use `fast-prime?', the fermat method instead of `prime?'
+;; should see log(n) growth instead of sqrt(n)
+
+(define (timed-prime-test-fermat n)
+  (newline)
+  (display n)
+  ;; runtime defined in sicp module
+  (start-prime-test-fermat n (runtime)))
+(define (start-prime-test-fermat n start-time)
+  (if (fast-prime? n 3)
+      (report-prime (- (runtime) start-time))))
+
+;; report first three primes in range [start, end)
+(define (search-for-primes-in-range-fermat start end count)
+  (when (and (< start end)
+             (< count 3))
+    (if (even? start)
+        (search-for-primes-in-range-fermat (+ 1 start) end count)
+        (begin
+          (if (fast-prime? start 3)
+              (begin 
+                (timed-prime-test-fermat start)
+                (search-for-primes-in-range-fermat (+ 2 start) end (+ 1 count)))
+              (search-for-primes-in-range-fermat (+ 2 start) end count))))))
+
+(define (search-for-primes start)
+  (search-for-primes-in-range start (+ start 1000) 0))
+
+(search-for-primes-fermat 1000)
+(search-for-primes-fermat 10000)
+(search-for-primes-fermat 100000)
+(search-for-primes-fermat 1000000)
+
+;; -------------------------------------------------------------------
+;;; Ex. 1.25
+
+;; No, the modulus should be taken at each iteration to ensure the numbers
+;; don't grow too large.
+
+;; -------------------------------------------------------------------
+;;; Ex. 1.26
+
+;; `expmod' is being called twice during each recursion, thus ending up
+;; with a runtime of 2^log_2(n) ==> O(n) runtime
+
+;; -------------------------------------------------------------------
+;;; Ex. 1.27
+
+;; Try fermat's test on some Carmichael numbers:
+(define carmichael-numbers '(561 1105 1729 2465 2821 6601))
+
+(map fermat-test carmichael-numbers)    ;all #t
+(map prime? carmichael-numbers)         ;all #f
