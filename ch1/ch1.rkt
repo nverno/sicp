@@ -386,3 +386,6 @@
 ;;     (gcd ...))                          ;not evaluated
 ;;
 ;; Totaling 4 calls to remainder for applicative-order.
+
+;; -------------------------------------------------------------------
+;;; Ex. 1.21 

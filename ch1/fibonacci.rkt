@@ -22,7 +22,8 @@
       b
       (fib-iter1 (+ a b) a (- count 1))))
 
-;; Exercise 1.19
+;; -------------------------------------------------------------------
+;;; Exercise 1.19
 ;; compute fibonacci numbers in log steps
 ;; write T_pq as:
 ;; [ q+p q ]
