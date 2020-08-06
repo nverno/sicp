@@ -1,1 +1,1 @@
-((nil (notes-file . "notes.org")))
+((nil (nvp-local-notes-file . "notes.org")))
