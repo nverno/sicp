@@ -1,0 +1,5 @@
+#+TITLE: UC Berkeley CS61a - Structure and Interpretation of Computer Programs
+
+- [[https://archive.org/details/ucberkeley_webcast_TTK2lZoWbPQ][Lectures (spring 2011)]]
+- [[https://www-inst.eecs.berkeley.edu//~cs61a/sp11/][Course Homepage (spring 2011)]]
+- [[https://edge.edx.org/courses/UCBerkeley/CS61A/Fall_2014/course/][edx fall 2014]]
