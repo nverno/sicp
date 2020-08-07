@@ -1,4 +1,5 @@
-
+#lang simply-scheme
+(define (best-total hand) 0)
 
 (define (twenty-one strategy)
   (define (play-dealer customer-hand dealer-hand-so-far rest-of-deck)
